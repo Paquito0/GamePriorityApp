@@ -1,0 +1,31 @@
+# Secrets
+.env
+.env.*
+*.pfx
+*.p12
+*.pem
+credentials.json
+secrets.json
+
+# Build outputs
+bin/
+obj/
+Publish/
+Publish-Slim/
+
+# IDE
+.vs/
+.idea/
+*.user
+*.suo
+*.vbw
+
+# NuGet
+*.nupkg
+packages/
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
