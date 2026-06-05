@@ -54,15 +54,31 @@ Isso permite que o Windows aplique prioridades personalizadas automaticamente qu
 
 ```
 GamePriorityApp/
-├── Program.vb              # Entry point
-├── Form1.vb                # Interface gráfica (Windows Forms)
-├── GamePriorityManager.vb # Lógica de Registry
-├── app.manifest            # Requer admin
-├── GamePriorityApp.vbproj  # Projeto .NET
-└── README.md              # Este arquivo
+├── Program.vb                       # Entry point
+├── Form1.vb                         # UI principal
+├── Models/
+│   ├── PriorityOptions.vb           # Enums + PrioritySettings
+│   ├── DetectedGame.vb              # Resultado de scan
+│   └── PriorityDescriptions.vb     # Tooltips
+├── Services/
+│   ├── AppLogger.vb                 # Logger em arquivo
+│   ├── AppConfigService.vb          # config.json
+│   ├── GameRegistryService.vb       # Operacoes de Registry
+│   └── GameScannerService.vb        # Async scan de jogos
+├── Forms/
+│   └── ConfigForm.vb                # Dialog de configuracao
+├── Resources/
+│   └── AppTheme.vb                  # Cores e fontes
+├── app.manifest
+└── GamePriorityApp.vbproj
 ```
 
-## Teknologi
+## Localizacao dos arquivos
+
+- **Config**: `%LocalAppData%\GamePriorityApp\config.json`
+- **Log**: `%LocalAppData%\GamePriorityApp\app.log`
+
+## Tecnologia
 
 - VB.NET (.NET 10)
 - Windows Forms
