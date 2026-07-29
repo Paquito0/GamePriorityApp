@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="0" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="WindowTitle" xml:space="preserve">
+    <value>Game Priority Manager</value>
+  </data>
+  <data name="AppTitle" xml:space="preserve">
+    <value>🎮 Game Priority Manager</value>
+  </data>
+  <data name="AppSubtitle" xml:space="preserve">
+    <value>Gerencie prioridades de processos para jogos</value>
+  </data>
+  <data name="GamesListLabel" xml:space="preserve">
+    <value>Jogos Configurados:</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Pesquisar jogos...</value>
+  </data>
+  <data name="NoGames" xml:space="preserve">
+    <value>(nenhum jogo adicionado)</value>
+  </data>
+  <data name="NoResults" xml:space="preserve">
+    <value>(nenhum resultado)</value>
+  </data>
+  <data name="BtnAdd" xml:space="preserve">
+    <value>➕ Adicionar</value>
+  </data>
+  <data name="BtnSave" xml:space="preserve">
+    <value>💾 Salvar</value>
+  </data>
+  <data name="BtnRemove" xml:space="preserve">
+    <value>🗑️ Remover</value>
+  </data>
+  <data name="BtnRefresh" xml:space="preserve">
+    <value>🔄 Atualizar</value>
+  </data>
+  <data name="BtnDetectGames" xml:space="preserve">
+    <value>🎮 Ver Jogos</value>
+  </data>
+  <data name="BtnConfig" xml:space="preserve">
+    <value>⚙️ Config</value>
+  </data>
+  <data name="ConfigTitle" xml:space="preserve">
+    <value>⚙️ Configurações de Pastas</value>
+  </data>
+  <data name="PriorityGroupTitle" xml:space="preserve">
+    <value>⚙️ Configurações de Prioridade</value>
+  </data>
+  <data name="DetectGroupTitle" xml:space="preserve">
+    <value>🔍 Detectar Jogos Instalados</value>
+  </data>
+  <data name="DoubleClickHint" xml:space="preserve">
+    <value>Duplo clique para adicionar</value>
+  </data>
+  <data name="LabelCpu" xml:space="preserve">
+    <value>CPU:</value>
+  </data>
+  <data name="LabelIo" xml:space="preserve">
+    <value>I/O:</value>
+  </data>
+  <data name="LabelPage" xml:space="preserve">
+    <value>RAM:</value>
+  </data>
+  <data name="LabelAudit" xml:space="preserve">
+    <value>Log:</value>
+  </data>
+  <data name="CpuIdle" xml:space="preserve">
+    <value>1 - Idle (Ocioso)</value>
+  </data>
+  <data name="CpuNormal" xml:space="preserve">
+    <value>2 - Normal (Padrao)</value>
+  </data>
+  <data name="CpuHigh" xml:space="preserve">
+    <value>3 - High (Alta)</value>
+  </data>
+  <data name="CpuBelowNormal" xml:space="preserve">
+    <value>5 - Below Normal</value>
+  </data>
+  <data name="CpuAboveNormal" xml:space="preserve">
+    <value>6 - Above Normal</value>
+  </data>
+  <data name="IoVeryLow" xml:space="preserve">
+    <value>0 - Very Low (Muito Baixa)</value>
+  </data>
+  <data name="IoLow" xml:space="preserve">
+    <value>1 - Low (Baixa)</value>
+  </data>
+  <data name="IoNormal" xml:space="preserve">
+    <value>2 - Normal (Padrao)</value>
+  </data>
+  <data name="PageVeryLow" xml:space="preserve">
+    <value>1 - Very Low</value>
+  </data>
+  <data name="PageLow" xml:space="preserve">
+    <value>2 - Low</value>
+  </data>
+  <data name="PageMedium" xml:space="preserve">
+    <value>3 - Medium</value>
+  </data>
+  <data name="PageBelowNormal" xml:space="preserve">
+    <value>4 - Below Normal</value>
+  </data>
+  <data name="PageNormal" xml:space="preserve">
+    <value>5 - Normal (Padrao)</value>
+  </data>
+  <data name="AuditDisabled" xml:space="preserve">
+    <value>0 - Desativado</value>
+  </data>
+  <data name="AuditEnabled" xml:space="preserve">
+    <value>1 - Ativado</value>
+  </data>
+  <data name="ConfigFoldersLabel" xml:space="preserve">
+    <value>Pastas onde o app busca jogos:</value>
+  </data>
+  <data name="CustomFoldersLabel" xml:space="preserve">
+    <value>Pastas Personalizadas:</value>
+  </data>
+  <data name="BtnBrowse" xml:space="preserve">
+    <value>...</value>
+  </data>
+  <data name="BtnAddFolder" xml:space="preserve">
+    <value>+</value>
+  </data>
+  <data name="BtnRemoveFolder" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="BtnCancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="StatusOk" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="StatusNotFound" xml:space="preserve">
+    <value>Nao encontrado</value>
+  </data>
+  <data name="BrowseFolderDescription" xml:space="preserve">
+    <value>Selecionar pasta personalizada</value>
+  </data>
+  <data name="SelectFolderFor" xml:space="preserve">
+    <value>Selecionar pasta do {0}</value>
+  </data>
+  <data name="OpenFileDialogTitle" xml:space="preserve">
+    <value>Selecionar Jogo</value>
+  </data>
+  <data name="OpenFileDialogFilter" xml:space="preserve">
+    <value>Executaveis|*.exe</value>
+  </data>
+  <data name="MsgGameAdded" xml:space="preserve">
+    <value>Jogo adicionado com sucesso!</value>
+  </data>
+  <data name="MsgSettingsSaved" xml:space="preserve">
+    <value>Configuracoes salvas com sucesso!</value>
+  </data>
+  <data name="MsgSelectGameModify" xml:space="preserve">
+    <value>Selecione um jogo para modificar.</value>
+  </data>
+  <data name="MsgSelectGameRemove" xml:space="preserve">
+    <value>Selecione um jogo para remover.</value>
+  </data>
+  <data name="MsgConfirmRemove" xml:space="preserve">
+    <value>Remover prioridade de {0}?</value>
+  </data>
+  <data name="MsgConfirmTitle" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="MsgSuccessTitle" xml:space="preserve">
+    <value>Sucesso</value>
+  </data>
+  <data name="MsgWarningTitle" xml:space="preserve">
+    <value>Atencao</value>
+  </data>
+  <data name="MsgErrorTitle" xml:space="preserve">
+    <value>Erro</value>
+  </data>
+  <data name="MsgGameAddedWithName" xml:space="preserve">
+    <value>{0} adicionado com sucesso!</value>
+  </data>
+  <data name="MsgSearchingGames" xml:space="preserve">
+    <value>Procurando jogos...</value>
+  </data>
+  <data name="MsgPleaseWait" xml:space="preserve">
+    <value>(aguarde...)</value>
+  </data>
+  <data name="MsgNoGamesFound" xml:space="preserve">
+    <value>Nenhum jogo encontrado!</value>
+  </data>
+  <data name="MsgCheckConfig" xml:space="preserve">
+    <value>Verifique:</value>
+  </data>
+  <data name="MsgCheckFolders" xml:space="preserve">
+    <value>- As pastas em Config</value>
+  </data>
+  <data name="MsgCheckFoldersExist" xml:space="preserve">
+    <value>- Se as pastas existem</value>
+  </data>
+  <data name="MsgCheckConfigFile" xml:space="preserve">
+    <value>- O arquivo config.json</value>
+  </data>
+  <data name="MsgGamesFound" xml:space="preserve">
+    <value>Encontrados {0} jogos:</value>
+  </data>
+  <data name="MsgFoldersNotFound" xml:space="preserve">
+    <value>As seguintes pastas nao foram encontradas:</value>
+  </data>
+  <data name="MsgSaveAnyway" xml:space="preserve">
+    <value>Deseja salvar mesmo assim?</value>
+  </data>
+  <data name="MsgFoldersNotFoundTitle" xml:space="preserve">
+    <value>Pastas nao encontradas</value>
+  </data>
+</root>

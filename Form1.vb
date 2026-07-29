@@ -8,6 +8,7 @@ Public Class Form1
     Inherits Form
 
     Private lstJogos As ListBox
+    Private txtSearch As TextBox
     Private btnAdicionar As Button
     Private btnRemover As Button
     Private btnRefresh As Button
@@ -33,6 +34,8 @@ Public Class Form1
     Private lstProcessos As ListBox
     Private grpProcessos As GroupBox
 
+    Private _allGames As New List(Of String)()
+
     Public Sub New()
         AppConfigService.EnsureExists()
         InitializeComponent()
@@ -52,8 +55,8 @@ Public Class Form1
     End Sub
 
     Private Sub ApplyFormSettings()
-        Me.Text = "Game Priority Manager"
-        Me.Size = New Drawing.Size(520, 750)
+        Me.Text = Strings.WindowTitle
+        Me.Size = New Drawing.Size(520, 770)
         Me.FormBorderStyle = FormBorderStyle.FixedSingle
         Me.MaximizeBox = False
         Me.StartPosition = FormStartPosition.CenterScreen
@@ -62,32 +65,44 @@ Public Class Form1
 
     Private Sub CreateHeader()
         lblTitulo = New Label()
-        lblTitulo.Text = "🎮 Game Priority Manager"
+        lblTitulo.Text = Strings.AppTitle
         lblTitulo.Font = AppTheme.TitleFont
         lblTitulo.ForeColor = AppTheme.AccentColor
         lblTitulo.Location = New Drawing.Point(20, 15)
         lblTitulo.AutoSize = True
 
         lblInfo = New Label()
-        lblInfo.Text = "Gerencie prioridades de processos para jogos"
+        lblInfo.Text = Strings.AppSubtitle
         lblInfo.Font = AppTheme.SubtitleFont
         lblInfo.ForeColor = AppTheme.MutedColor
         lblInfo.Location = New Drawing.Point(20, 42)
         lblInfo.AutoSize = True
 
         Dim lblJogos As New Label()
-        lblJogos.Text = "Jogos Configurados:"
+        lblJogos.Text = Strings.GamesListLabel
         lblJogos.Font = AppTheme.GroupFont
         lblJogos.ForeColor = AppTheme.ForeColor
         lblJogos.Location = New Drawing.Point(20, 68)
         lblJogos.AutoSize = True
         Me.Controls.Add(lblJogos)
+
+        txtSearch = New TextBox()
+        txtSearch.Location = New Drawing.Point(20, 88)
+        txtSearch.Size = New Drawing.Size(470, 22)
+        txtSearch.BackColor = AppTheme.TextBackColor
+        txtSearch.ForeColor = AppTheme.ForeColor
+        txtSearch.BorderStyle = BorderStyle.FixedSingle
+        txtSearch.Font = AppTheme.LabelFont
+        txtSearch.PlaceholderText = Strings.SearchPlaceholder
+        txtSearch.Tag = False
+        AddHandler txtSearch.TextChanged, AddressOf TxtSearch_TextChanged
+        Me.Controls.Add(txtSearch)
     End Sub
 
     Private Sub CreateGamesList()
         lstJogos = New ListBox()
-        lstJogos.Location = New Drawing.Point(20, 92)
-        lstJogos.Size = New Drawing.Size(470, 180)
+        lstJogos.Location = New Drawing.Point(20, 112)
+        lstJogos.Size = New Drawing.Size(470, 160)
         lstJogos.BackColor = AppTheme.ControlBackColor
         lstJogos.ForeColor = AppTheme.ForeColor
         lstJogos.BorderStyle = BorderStyle.FixedSingle
@@ -101,10 +116,10 @@ Public Class Form1
         panel.FlowDirection = FlowDirection.LeftToRight
         panel.AutoSize = True
 
-        btnAdicionar = CreateActionButton("➕ Adicionar", AppTheme.PrimaryButton, 0)
-        btnSalvar = CreateActionButton("💾 Salvar", AppTheme.SuccessButton, 0)
-        btnRemover = CreateActionButton("🗑️ Remover", AppTheme.DangerButton, 0)
-        btnRefresh = CreateActionButton("🔄 Atualizar", AppTheme.NeutralButton, 0)
+        btnAdicionar = CreateActionButton(Strings.BtnAdd, AppTheme.PrimaryButton, 0)
+        btnSalvar = CreateActionButton(Strings.BtnSave, AppTheme.SuccessButton, 0)
+        btnRemover = CreateActionButton(Strings.BtnRemove, AppTheme.DangerButton, 0)
+        btnRefresh = CreateActionButton(Strings.BtnRefresh, AppTheme.NeutralButton, 0)
 
         panel.Controls.Add(btnAdicionar)
         panel.Controls.Add(btnSalvar)
@@ -127,29 +142,29 @@ Public Class Form1
 
     Private Sub CreatePriorityGroup()
         grpExtras = New GroupBox()
-        grpExtras.Text = "⚙️ Configurações de Prioridade"
+        grpExtras.Text = Strings.PriorityGroupTitle
         grpExtras.ForeColor = AppTheme.WarnColor
         grpExtras.Font = AppTheme.GroupFont
         grpExtras.Location = New Drawing.Point(20, 330)
         grpExtras.Size = New Drawing.Size(470, 140)
         grpExtras.BackColor = AppTheme.PanelBackColor
 
-        lblCpu = CreateFieldLabel("CPU:", New Drawing.Point(15, 25))
+        lblCpu = CreateFieldLabel(Strings.LabelCpu, New Drawing.Point(15, 25))
         cboCpuPriority = CreatePriorityComboBox(New Drawing.Point(65, 23))
         PopulateCpuOptions()
         cboCpuPriority.SelectedIndex = 2
 
-        lblIo = CreateFieldLabel("I/O:", New Drawing.Point(15, 55))
+        lblIo = CreateFieldLabel(Strings.LabelIo, New Drawing.Point(15, 55))
         cboIoPriority = CreatePriorityComboBox(New Drawing.Point(65, 53))
         PopulateIoOptions()
         cboIoPriority.SelectedIndex = 2
 
-        lblPage = CreateFieldLabel("RAM:", New Drawing.Point(15, 85))
+        lblPage = CreateFieldLabel(Strings.LabelPage, New Drawing.Point(15, 85))
         cboPagePriority = CreatePriorityComboBox(New Drawing.Point(65, 83))
         PopulatePageOptions()
         cboPagePriority.SelectedIndex = 4
 
-        lblAudit = CreateFieldLabel("Log:", New Drawing.Point(15, 115))
+        lblAudit = CreateFieldLabel(Strings.LabelAudit, New Drawing.Point(15, 115))
         cboAuditLevel = CreatePriorityComboBox(New Drawing.Point(65, 113))
         PopulateAuditOptions()
         cboAuditLevel.SelectedIndex = 0
@@ -185,42 +200,42 @@ Public Class Form1
 
     Private Sub PopulateCpuOptions()
         cboCpuPriority.Items.AddRange(New Object() {
-            "1 - Idle (Ocioso)",
-            "2 - Normal (Padrao)",
-            "3 - High (Alta)",
-            "5 - Below Normal",
-            "6 - Above Normal"
+            Strings.CpuIdle,
+            Strings.CpuNormal,
+            Strings.CpuHigh,
+            Strings.CpuBelowNormal,
+            Strings.CpuAboveNormal
         })
     End Sub
 
     Private Sub PopulateIoOptions()
         cboIoPriority.Items.AddRange(New Object() {
-            "0 - Very Low (Muito Baixa)",
-            "1 - Low (Baixa)",
-            "2 - Normal (Padrao)"
+            Strings.IoVeryLow,
+            Strings.IoLow,
+            Strings.IoNormal
         })
     End Sub
 
     Private Sub PopulatePageOptions()
         cboPagePriority.Items.AddRange(New Object() {
-            "1 - Very Low",
-            "2 - Low",
-            "3 - Medium",
-            "4 - Below Normal",
-            "5 - Normal (Padrao)"
+            Strings.PageVeryLow,
+            Strings.PageLow,
+            Strings.PageMedium,
+            Strings.PageBelowNormal,
+            Strings.PageNormal
         })
     End Sub
 
     Private Sub PopulateAuditOptions()
         cboAuditLevel.Items.AddRange(New Object() {
-            "0 - Desativado",
-            "1 - Ativado"
+            Strings.AuditDisabled,
+            Strings.AuditEnabled
         })
     End Sub
 
     Private Sub CreateDetectionGroup()
         grpProcessos = New GroupBox()
-        grpProcessos.Text = "🔍 Detectar Jogos Instalados"
+        grpProcessos.Text = Strings.DetectGroupTitle
         grpProcessos.ForeColor = AppTheme.SuccessColor
         grpProcessos.Font = AppTheme.GroupFont
         grpProcessos.Location = New Drawing.Point(20, 485)
@@ -236,7 +251,7 @@ Public Class Form1
         lstProcessos.Font = AppTheme.SmallListFont
 
         btnDetectarInstalados = New Button()
-        btnDetectarInstalados.Text = "🎮 Ver Jogos"
+        btnDetectarInstalados.Text = Strings.BtnDetectGames
         btnDetectarInstalados.Location = New Drawing.Point(295, 25)
         btnDetectarInstalados.Size = New Drawing.Size(100, 30)
         btnDetectarInstalados.BackColor = AppTheme.DetectButton
@@ -245,7 +260,7 @@ Public Class Form1
         btnDetectarInstalados.Font = AppTheme.ButtonFont
 
         btnConfig = New Button()
-        btnConfig.Text = "⚙️ Config"
+        btnConfig.Text = Strings.BtnConfig
         btnConfig.Location = New Drawing.Point(295, 60)
         btnConfig.Size = New Drawing.Size(100, 30)
         btnConfig.BackColor = AppTheme.ConfigButton
@@ -254,7 +269,7 @@ Public Class Form1
         btnConfig.Font = AppTheme.ButtonFont
 
         Dim lblDica As New Label()
-        lblDica.Text = "Duplo clique para adicionar"
+        lblDica.Text = Strings.DoubleClickHint
         lblDica.Font = AppTheme.HintFont
         lblDica.ForeColor = AppTheme.HintColor
         lblDica.Location = New Drawing.Point(295, 95)
@@ -290,8 +305,8 @@ Public Class Form1
 
     Private Sub CreateDialogs()
         dlgAbrir = New OpenFileDialog()
-        dlgAbrir.Filter = "Executaveis|*.exe"
-        dlgAbrir.Title = "Selecionar Jogo"
+        dlgAbrir.Filter = Strings.OpenFileDialogFilter
+        dlgAbrir.Title = Strings.OpenFileDialogTitle
     End Sub
 
     Private Sub WireEvents()
@@ -313,26 +328,48 @@ Public Class Form1
 
     Private Sub LoadGames()
         lstJogos.Items.Clear()
+        _allGames.Clear()
         Try
             Dim games = GameRegistryService.LoadGames()
             For Each g In games
-                lstJogos.Items.Add(g)
+                _allGames.Add(g)
             Next
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
+        ApplyFilter()
+    End Sub
+
+    Private Sub ApplyFilter()
+        Dim filter = txtSearch.Text.Trim()
+        lstJogos.Items.Clear()
+        For Each g In _allGames
+            If String.IsNullOrEmpty(filter) OrElse g.IndexOf(filter, StringComparison.OrdinalIgnoreCase) >= 0 Then
+                lstJogos.Items.Add(g)
+            End If
+        Next
+
         If lstJogos.Items.Count = 0 Then
-            lstJogos.Items.Add("(nenhum jogo adicionado)")
+            If _allGames.Count = 0 Then
+                lstJogos.Items.Add(Strings.NoGames)
+            Else
+                lstJogos.Items.Add(Strings.NoResults)
+            End If
             lstJogos.ForeColor = AppTheme.GrayColor
         Else
             lstJogos.ForeColor = AppTheme.ForeColor
         End If
     End Sub
 
+    Private Sub TxtSearch_TextChanged(sender As Object, e As EventArgs)
+        ApplyFilter()
+    End Sub
+
     Private Function HasSelectedGame() As Boolean
         Return lstJogos.SelectedItem IsNot Nothing AndAlso
-               lstJogos.SelectedItem.ToString() <> "(nenhum jogo adicionado)"
+               lstJogos.SelectedItem.ToString() <> Strings.NoGames AndAlso
+               lstJogos.SelectedItem.ToString() <> Strings.NoResults
     End Function
 
     Private Function GetSelectedGameName() As String
@@ -369,41 +406,41 @@ Public Class Form1
         If dlgAbrir.ShowDialog() <> DialogResult.OK Then Return
         Try
             GameRegistryService.AddGame(dlgAbrir.FileName, GetCurrentSettings())
-            MessageBox.Show("Jogo adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show(Strings.MsgGameAdded, Strings.MsgSuccessTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadGames()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(ex.Message, Strings.MsgErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub BtnSalvar_Click(sender As Object, e As EventArgs)
         Dim gameName = GetSelectedGameName()
         If gameName Is Nothing Then
-            MessageBox.Show("Selecione um jogo para modificar.", "Atencao", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show(Strings.MsgSelectGameModify, Strings.MsgWarningTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
         Try
             GameRegistryService.UpdateGame(gameName, GetCurrentSettings())
-            MessageBox.Show("Configuracoes salvas com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show(Strings.MsgSettingsSaved, Strings.MsgSuccessTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(ex.Message, Strings.MsgErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub BtnRemover_Click(sender As Object, e As EventArgs)
         Dim gameName = GetSelectedGameName()
         If gameName Is Nothing Then
-            MessageBox.Show("Selecione um jogo para remover.", "Atencao", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show(Strings.MsgSelectGameRemove, Strings.MsgWarningTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        Dim result = MessageBox.Show($"Remover prioridade de {gameName}?", "Confirmar",
+        Dim result = MessageBox.Show(Strings.MsgConfirmRemove(gameName), Strings.MsgConfirmTitle,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If result <> DialogResult.Yes Then Return
         Try
             GameRegistryService.RemoveGame(gameName)
             LoadGames()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(ex.Message, Strings.MsgErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -423,8 +460,8 @@ Public Class Form1
     Private Async Sub BtnDetectarInstalados_Click(sender As Object, e As EventArgs)
         btnDetectarInstalados.Enabled = False
         lstProcessos.Items.Clear()
-        lstProcessos.Items.Add("Procurando jogos...")
-        lstProcessos.Items.Add("(aguarde...)")
+        lstProcessos.Items.Add(Strings.MsgSearchingGames)
+        lstProcessos.Items.Add(Strings.MsgPleaseWait)
         lstProcessos.Refresh()
 
         Try
@@ -432,20 +469,20 @@ Public Class Form1
             lstProcessos.Items.Clear()
             If games.Count = 0 Then
                 lstProcessos.Items.AddRange(New Object() {
-                    "Nenhum jogo encontrado!",
+                    Strings.MsgNoGamesFound,
                     "",
-                    "Verifique:",
-                    "- As pastas em Config",
-                    "- Se as pastas existem",
-                    "- O arquivo config.json"
+                    Strings.MsgCheckConfig,
+                    Strings.MsgCheckFolders,
+                    Strings.MsgCheckFoldersExist,
+                    Strings.MsgCheckConfigFile
                 })
             Else
-                lstProcessos.Items.Add($"Encontrados {games.Count} jogos:")
+                lstProcessos.Items.Add(Strings.MsgGamesFound(games.Count))
                 For Each g In games
                     lstProcessos.Items.Add(g.DisplayName)
                 Next
                 lstProcessos.Items.Add("")
-                lstProcessos.Items.Add("Duplo clique para adicionar")
+                lstProcessos.Items.Add(Strings.DoubleClickHint)
             End If
         Catch ex As Exception
             lstProcessos.Items.Clear()
@@ -474,11 +511,11 @@ Public Class Form1
         End If
         Try
             GameRegistryService.AddGame(nomeJogo, GetCurrentSettings())
-            MessageBox.Show($"{nomeJogo} adicionado com sucesso!", "Sucesso",
+            MessageBox.Show(Strings.MsgGameAddedWithName(nomeJogo), Strings.MsgSuccessTitle,
                 MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadGames()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show(ex.Message, Strings.MsgErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 End Class

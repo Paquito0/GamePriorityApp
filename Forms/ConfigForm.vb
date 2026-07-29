@@ -22,7 +22,7 @@ Namespace Forms
         End Sub
 
         Private Sub InitializeComponent()
-            Me.Text = "⚙️ Configurações de Pastas"
+            Me.Text = Strings.ConfigTitle
             Me.Size = New Drawing.Size(620, 450)
             Me.StartPosition = FormStartPosition.CenterParent
             Me.BackColor = AppTheme.BackColor
@@ -36,7 +36,7 @@ Namespace Forms
             Me.Controls.Clear()
 
             Dim lblTitulo As New Label()
-            lblTitulo.Text = "Pastas onde o app busca jogos:"
+            lblTitulo.Text = Strings.ConfigFoldersLabel
             lblTitulo.Font = AppTheme.DialogTitleFont
             lblTitulo.ForeColor = AppTheme.ForeColor
             lblTitulo.Location = New Drawing.Point(20, 15)
@@ -50,7 +50,7 @@ Namespace Forms
             Next
 
             Dim lblPersonalizadas As New Label()
-            lblPersonalizadas.Text = "Pastas Personalizadas:"
+            lblPersonalizadas.Text = Strings.CustomFoldersLabel
             lblPersonalizadas.Font = AppTheme.GroupFont
             lblPersonalizadas.ForeColor = AppTheme.SuccessColor
             lblPersonalizadas.Location = New Drawing.Point(20, yPos + 10)
@@ -72,14 +72,14 @@ Namespace Forms
             Me.Controls.Add(lstPersonalizadas)
 
             Dim btnAddPasta As New Button()
-            btnAddPasta.Text = "+"
+            btnAddPasta.Text = Strings.BtnAddFolder
             btnAddPasta.Location = New Drawing.Point(400, yPos)
             btnAddPasta.Size = New Drawing.Size(55, 25)
             btnAddPasta.BackColor = AppTheme.AddFolderButton
             btnAddPasta.ForeColor = AppTheme.ForeColor
             AddHandler btnAddPasta.Click, Sub()
                 Using fbd As New FolderBrowserDialog()
-                    fbd.Description = "Selecionar pasta personalizada"
+                    fbd.Description = Strings.BrowseFolderDescription
                     If fbd.ShowDialog() = DialogResult.OK Then
                         lstPersonalizadas.Items.Add(fbd.SelectedPath)
                     End If
@@ -88,7 +88,7 @@ Namespace Forms
             Me.Controls.Add(btnAddPasta)
 
             Dim btnRemovePasta As New Button()
-            btnRemovePasta.Text = "-"
+            btnRemovePasta.Text = Strings.BtnRemoveFolder
             btnRemovePasta.Location = New Drawing.Point(400, yPos + 30)
             btnRemovePasta.Size = New Drawing.Size(55, 25)
             btnRemovePasta.BackColor = AppTheme.RemoveFolderButton
@@ -101,7 +101,7 @@ Namespace Forms
             Me.Controls.Add(btnRemovePasta)
 
             Dim btnSalvar As New Button()
-            btnSalvar.Text = "💾 Salvar"
+            btnSalvar.Text = Strings.BtnSave
             btnSalvar.Location = New Drawing.Point(290, 360)
             btnSalvar.Size = New Drawing.Size(100, 35)
             btnSalvar.BackColor = AppTheme.SaveButton
@@ -112,7 +112,7 @@ Namespace Forms
             Me.Controls.Add(btnSalvar)
 
             Dim btnCancelar As New Button()
-            btnCancelar.Text = "Cancelar"
+            btnCancelar.Text = Strings.BtnCancel
             btnCancelar.Location = New Drawing.Point(400, 360)
             btnCancelar.Size = New Drawing.Size(100, 35)
             btnCancelar.BackColor = AppTheme.CancelButton
@@ -153,7 +153,7 @@ Namespace Forms
             Dim svcKey = svc.Key
             AddHandler btnBrowse.Click, Sub()
                 Using fbd As New FolderBrowserDialog()
-                    fbd.Description = $"Selecionar pasta do {svcKey}"
+                    fbd.Description = Strings.SelectFolderFor(svcKey)
                     If fbd.ShowDialog() = DialogResult.OK Then
                         txtRef.Text = fbd.SelectedPath
                     End If
@@ -163,10 +163,10 @@ Namespace Forms
 
             Dim lblStatus As New Label()
             If Directory.Exists(svc.Path) Then
-                lblStatus.Text = "OK"
+                lblStatus.Text = Strings.StatusOk
                 lblStatus.ForeColor = AppTheme.SuccessColor
             Else
-                lblStatus.Text = "Nao encontrado"
+                lblStatus.Text = Strings.StatusNotFound
                 lblStatus.ForeColor = AppTheme.ErrorColor
             End If
             lblStatus.Location = New Drawing.Point(460, yPos + 3)
@@ -198,11 +198,33 @@ Namespace Forms
                 Next
 
                 Dim customs = lstPersonalizadas.Items.Cast(Of String).ToList()
+
+                Dim missing = New List(Of String)()
+                For Each svc In _services
+                    If Not String.IsNullOrWhiteSpace(svc.Path) AndAlso Not Directory.Exists(svc.Path) Then
+                        missing.Add($"{svc.Key}: {svc.Path}")
+                    End If
+                Next
+                For Each p In customs
+                    If Not String.IsNullOrWhiteSpace(p) AndAlso Not Directory.Exists(p) Then
+                        missing.Add(p)
+                    End If
+                Next
+
+                If missing.Count > 0 Then
+                    Dim msg = Strings.MsgFoldersNotFound & vbCrLf & vbCrLf &
+                              String.Join(vbCrLf, missing) & vbCrLf & vbCrLf &
+                              Strings.MsgSaveAnyway
+                    Dim result = MessageBox.Show(msg, Strings.MsgFoldersNotFoundTitle,
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+                    If result <> DialogResult.Yes Then Return
+                End If
+
                 AppConfigService.UpdateFolders(_services, customs)
                 AppLogger.Info("Configuracao de pastas salva")
                 Me.DialogResult = DialogResult.OK
             Catch ex As Exception
-                MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show(ex.Message, Strings.MsgErrorTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
     End Class

@@ -33,13 +33,13 @@ Namespace Services
         End Sub
 
         Public Shared Sub UpdateGame(exeName As String, settings As PrioritySettings)
-            Dim cleanName = Path.GetFileNameWithoutExtension(exeName)
+            Dim cleanName = Path.GetFileName(exeName)
             WritePerfOptions(cleanName, settings)
         End Sub
 
         Public Shared Sub RemoveGame(exeName As String)
-            Dim nameWithoutExt = Path.GetFileNameWithoutExtension(exeName)
             Dim nameWithExt = Path.GetFileName(exeName)
+            Dim nameWithoutExt = Path.GetFileNameWithoutExtension(exeName)
 
             Dim ex = If(DeleteSubKeyTree(nameWithExt), DeleteSubKeyTree(nameWithoutExt))
             If ex IsNot Nothing Then
@@ -48,7 +48,7 @@ Namespace Services
         End Sub
 
         Public Shared Function GetPerfOptions(exeName As String) As PrioritySettings
-            Dim cleanName = Path.GetFileNameWithoutExtension(exeName)
+            Dim cleanName = Path.GetFileName(exeName)
             Dim settings As New PrioritySettings()
 
             Try
@@ -122,7 +122,7 @@ Namespace Services
             If Not cleanName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) Then
                 Throw New ArgumentException("Apenas arquivos .exe são permitidos.")
             End If
-            Return Path.GetFileNameWithoutExtension(cleanName)
+            Return cleanName
         End Function
     End Class
 
